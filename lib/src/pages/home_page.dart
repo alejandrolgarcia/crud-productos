@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:form_validation/src/models/producto_model.dart';
+
+import 'package:form_validation/src/providers/producto_provider.dart';
 // import 'package:form_validation/src/bloc/provider.dart';
 
 class HomePage extends StatelessWidget {
+
+  final productosProvider = new ProductoProvider();
+
   @override
   Widget build(BuildContext context) {
 
@@ -11,12 +17,47 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Home')
       ),
-      body: Container(
+      body: _obtenerListaProductos(),
 
-      ),
       floatingActionButton: _crearBoton(context),
     );
   }
+
+  Widget _obtenerListaProductos(){
+
+    return FutureBuilder(
+      future: productosProvider.obtenerProductos(),
+      builder: (BuildContext context, AsyncSnapshot<List<ProductoModel>> snapshot) {
+        
+        if(snapshot.hasData) {
+          return ListView.builder(
+            itemCount: snapshot.data.length,
+            itemBuilder: (BuildContext context, int index) => _crearItem(context, snapshot.data[index]),
+          );
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  Widget _crearItem(BuildContext context, ProductoModel producto) {
+
+    return Dismissible(
+      key: UniqueKey(),
+      background: Container(
+        color: Colors.red
+      ),
+      onDismissed: (direccion) => productosProvider.borrarProducto(producto.id),
+
+      child: ListTile(
+        title: Text('${ producto.titulo } - ${ producto.valor }'),
+        subtitle: Text(producto.id),
+        onTap: () => Navigator.pushNamed(context, 'producto', arguments: producto),
+      ),
+    );
+  }
+
   _crearBoton(BuildContext context) {
     return FloatingActionButton(
       child: Icon(Icons.add),
@@ -24,4 +65,5 @@ class HomePage extends StatelessWidget {
       onPressed: ()=> Navigator.pushNamed(context, 'producto'),
     );
   }
+
 }

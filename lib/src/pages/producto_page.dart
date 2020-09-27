@@ -173,7 +173,13 @@ class _ProductoPageState extends State<ProductoPage> {
 
     if(producto.imgUrl != null) {
       // Implementar
-      return Container();
+      return FadeInImage(
+        image: NetworkImage( producto.imgUrl ),
+        placeholder: AssetImage('assets/jar-loading.gif'),
+        height: 300.0,
+        fit: BoxFit.contain,
+      );
+      
     } else {
 
       return Image(

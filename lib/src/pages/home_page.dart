@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:form_validation/src/models/producto_model.dart';
 
+import 'package:form_validation/src/models/producto_model.dart';
+import 'package:form_validation/src/preferencias_usuario/preferencias_usuario.dart';
 import 'package:form_validation/src/providers/producto_provider.dart';
 // import 'package:form_validation/src/bloc/provider.dart';
 
 class HomePage extends StatelessWidget {
 
   final productosProvider = new ProductoProvider();
+  static final String routeName = 'home';
+  final prefs = new PreferenciasUsuario();
 
   @override
   Widget build(BuildContext context) {
 
     // final bloc = Provider.of(context);
+    prefs.ultimaPagina = HomePage.routeName;
     
     return Scaffold(
       appBar: AppBar(
